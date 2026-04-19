@@ -8,29 +8,43 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.recipiesplan.recipies.dto.IngredientDto;
+import com.recipiesplan.recipies.dto.RecipeDto;
 import com.recipiesplan.recipies.entities.Ingredient;
 import com.recipiesplan.recipies.entities.Recipe;
 import com.recipiesplan.recipies.repositories.RecipiesRepository;
 import com.recipiesplan.recipies.services.impl.RecipiesServiceImpl;
+
+import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 public class RepositoryTest {
     @Mock
     private RecipiesRepository recipiesRepository;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @InjectMocks
     private RecipiesServiceImpl recipiesService;
+
+    @BeforeEach
+    void setUp() {
+        recipiesService = new RecipiesServiceImpl(recipiesRepository, objectMapper);
+    }
+
 
     @Test
     void testFindAll() {
@@ -67,6 +81,22 @@ public class RepositoryTest {
 
     }
 
+    @Test
+    void testSaveData(){
+        // Creation mock data
+        Recipe recipe = makeRecipe();
+        RecipeDto recipeDto = makeRecipeDto();
+
+
+        // Define mock behavior
+        Mockito.when(recipiesRepository.save(any(Recipe.class))).thenReturn(recipe);
+
+        // Execute and verify
+        Recipe response = recipiesService.saveRecipe(recipeDto);
+        assertEquals(recipe, response);
+        verify(recipiesRepository).save(recipe);
+    }
+
     private Recipe makeRecipe() {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(makeIngredient());
@@ -95,4 +125,26 @@ public class RepositoryTest {
         ingredient.setUnit("test");
         return ingredient;
     }
+
+    private RecipeDto makeRecipeDto() {
+        RecipeDto recipeDto = new RecipeDto();
+        recipeDto.setName("test");
+        recipeDto.setDescription("test");
+        recipeDto.setInstructions("test");
+        recipeDto.setIngredients(List.of(makeIngredientDto()));
+        recipeDto.setTimePreparation("test");
+        recipeDto.setPortions(1);
+        recipeDto.setUtensils(List.of("Cuchara"));
+        recipeDto.setRecipeType("test");
+        return recipeDto;
+    }
+
+    private IngredientDto makeIngredientDto() {
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setName("test");
+        ingredientDto.setQuantity(1);
+        ingredientDto.setUnit("test");
+        return ingredientDto;
+    }
+
 }
