@@ -3,6 +3,7 @@ package com.recipiesplan.recipies.entities;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class Recipe {
     private List<Ingredient> ingredients;
     private String timePreparation;
     private Integer portions;
+    @ElementCollection
     private List<String> utensils;
     private String recipeType;
 }
