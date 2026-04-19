@@ -1,7 +1,9 @@
 package com.recipiesplan.recipies.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -19,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.recipiesplan.recipies.dto.IngredientDto;
+import com.recipiesplan.recipies.dto.RecipeDto;
 import com.recipiesplan.recipies.entities.Ingredient;
 import com.recipiesplan.recipies.entities.Recipe;
 import com.recipiesplan.recipies.services.RecipiesService;
@@ -49,6 +53,27 @@ public class RecipiesControllerTest {
                 .andExpect(jsonPath("$.meta.transacionID").exists());
     }
 
+    @Test
+    void shouldSaveRecipeDate(){
+        // Creation mock data
+        Recipe recipe = makeRecipe();
+        RecipeDto recipeDto = makeRecipeDto();
+
+
+        // Define mock behavior
+        when(recipiesService.saveRecipe(recipeDto)).thenReturn(recipe);
+
+        try {
+            mockMvc.perform(post("/recipe"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.name").value("test"))
+                    .andExpect(jsonPath("$.meta.status").value("OK"))
+                    .andExpect(jsonPath("$.meta.transacionID").exists());
+        } catch (Exception e ){
+            e.printStackTrace();
+        }
+    }
+
     private Recipe makeRecipe() {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(makeIngredient());
@@ -76,6 +101,27 @@ public class RecipiesControllerTest {
         ingredient.setQuantity(1);
         ingredient.setUnit("test");
         return ingredient;
+    }
+
+    private RecipeDto makeRecipeDto() {
+        RecipeDto recipeDto = new RecipeDto();
+        recipeDto.setName("test");
+        recipeDto.setDescription("test");
+        recipeDto.setInstructions("test");
+        recipeDto.setIngredients(List.of(makeIngredientDto()));
+        recipeDto.setTimePreparation("test");
+        recipeDto.setPortions(1);
+        recipeDto.setUtensils(List.of("Cuchara"));
+        recipeDto.setRecipeType("test");
+        return recipeDto;
+    }
+
+    private IngredientDto makeIngredientDto() {
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setName("test");
+        ingredientDto.setQuantity(1);
+        ingredientDto.setUnit("test");
+        return ingredientDto;
     }
 
 }
