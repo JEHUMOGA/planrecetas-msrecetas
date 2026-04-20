@@ -48,12 +48,12 @@ public class RecipiesController {
     @PostMapping("recipe")
     public ResponseEntity<?> postRecipe(@RequestBody RecipeDto recipe) {
         Recipe savedRecipe = recipiesService.saveRecipe(recipe);
-        Meta meta = new Meta(HttpStatus.OK, HttpStatusCode.valueOf(200), Utilities.timestampGeneration());
+        Meta meta = new Meta(HttpStatus.CREATED, HttpStatusCode.valueOf(201), Utilities.timestampGeneration());
         Response<Recipe> response = new com.recipiesplan.recipies.dto.Response<>();
         response.setData(savedRecipe);
         response.setMeta(meta);
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     

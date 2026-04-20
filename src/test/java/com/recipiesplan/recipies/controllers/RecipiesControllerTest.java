@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,10 +28,15 @@ import com.recipiesplan.recipies.entities.Ingredient;
 import com.recipiesplan.recipies.entities.Recipe;
 import com.recipiesplan.recipies.services.RecipiesService;
 
+import tools.jackson.databind.ObjectMapper;
+
 @WebMvcTest(RecipiesController.class)
 public class RecipiesControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockitoBean 
     private RecipiesService recipiesService;
@@ -64,10 +70,11 @@ public class RecipiesControllerTest {
         when(recipiesService.saveRecipe(recipeDto)).thenReturn(recipe);
 
         try {
-            mockMvc.perform(post("/recipe"))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.name").value("test"))
-                    .andExpect(jsonPath("$.meta.status").value("OK"))
+            mockMvc.perform(post("/recipe")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(recipeDto)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.meta.status").value("CREATED"))
                     .andExpect(jsonPath("$.meta.transacionID").exists());
         } catch (Exception e ){
             e.printStackTrace();
