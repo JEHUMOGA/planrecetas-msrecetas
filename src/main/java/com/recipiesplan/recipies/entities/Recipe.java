@@ -22,11 +22,10 @@ public class Recipe {
     private String name;
     private String description;
     private String instructions;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ingredient> ingredients;
     private String timePreparation;
     private Integer portions;
-    @ElementCollection
     private List<String> utensils;
     private String recipeType;
 }
