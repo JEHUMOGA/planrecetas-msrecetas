@@ -15,15 +15,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.recipiesplan.recipies.dto.IngredientDto;
+import com.recipiesplan.recipies.dto.IngredientsRecipesDto;
 import com.recipiesplan.recipies.dto.RecipeDto;
 import com.recipiesplan.recipies.entities.Ingredient;
+import com.recipiesplan.recipies.entities.IngredientsRecipes;
 import com.recipiesplan.recipies.entities.Recipe;
 import com.recipiesplan.recipies.repositories.RecipiesRepository;
 import com.recipiesplan.recipies.services.impl.RecipiesServiceImpl;
@@ -31,7 +32,7 @@ import com.recipiesplan.recipies.services.impl.RecipiesServiceImpl;
 import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
-public class RepositoryTest {
+public class RecipesServiceTest {
     @Mock
     private RecipiesRepository recipiesRepository;
 
@@ -94,12 +95,12 @@ public class RepositoryTest {
         // Execute and verify
         Recipe response = recipiesService.saveRecipe(recipeDto);
         assertEquals(recipe, response);
-        verify(recipiesRepository).save(recipe);
+        verify(recipiesRepository).save(any(Recipe.class));
     }
 
     private Recipe makeRecipe() {
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(makeIngredient());
+        List<IngredientsRecipes> ingredients = new ArrayList<>();
+        ingredients.add(makeIngredientsRecipes());
 
         List<String> utensils = new ArrayList<>();
         utensils.add("Cuchara");
@@ -121,9 +122,16 @@ public class RepositoryTest {
     private Ingredient makeIngredient() {
         Ingredient ingredient = new Ingredient();
         ingredient.setName("test");
-        ingredient.setQuantity(1);
-        ingredient.setUnit("test");
+        ingredient.setDescription("test");
         return ingredient;
+    }
+
+    private IngredientsRecipes makeIngredientsRecipes() {
+        IngredientsRecipes ingredientsRecipes = new IngredientsRecipes();
+        ingredientsRecipes.setQuantity(1);
+        ingredientsRecipes.setUnit("test");
+        ingredientsRecipes.setIngredient(makeIngredient());
+        return ingredientsRecipes;
     }
 
     private RecipeDto makeRecipeDto() {
@@ -131,7 +139,7 @@ public class RepositoryTest {
         recipeDto.setName("test");
         recipeDto.setDescription("test");
         recipeDto.setInstructions("test");
-        recipeDto.setIngredients(List.of(makeIngredientDto()));
+        recipeDto.setIngredients(List.of(makeIngredientsRecipesDto()));
         recipeDto.setTimePreparation("test");
         recipeDto.setPortions(1);
         recipeDto.setUtensils(List.of("Cuchara"));
@@ -139,12 +147,12 @@ public class RepositoryTest {
         return recipeDto;
     }
 
-    private IngredientDto makeIngredientDto() {
-        IngredientDto ingredientDto = new IngredientDto();
-        ingredientDto.setName("test");
-        ingredientDto.setQuantity(1);
-        ingredientDto.setUnit("test");
-        return ingredientDto;
+    private IngredientsRecipesDto makeIngredientsRecipesDto() {
+        IngredientsRecipesDto ingredientsRecipesDto = new IngredientsRecipesDto();
+        ingredientsRecipesDto.setQuantity(1);
+        ingredientsRecipesDto.setUnit("test");
+        ingredientsRecipesDto.setIngredient(makeIngredient());
+        return ingredientsRecipesDto;
     }
 
 }

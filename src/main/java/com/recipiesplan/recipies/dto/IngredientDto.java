@@ -8,6 +8,5 @@ import lombok.Setter;
 public class IngredientDto {
     private Long id;
     private String name;
-    private Integer quantity;
-    private String unit;
+    private String description;
 }

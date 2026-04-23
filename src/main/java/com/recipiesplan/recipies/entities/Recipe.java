@@ -3,7 +3,6 @@ package com.recipiesplan.recipies.entities;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +22,7 @@ public class Recipe {
     private String description;
     private String instructions;
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ingredient> ingredients;
+    private List<IngredientsRecipes> ingredients;
     private String timePreparation;
     private Integer portions;
     private List<String> utensils;

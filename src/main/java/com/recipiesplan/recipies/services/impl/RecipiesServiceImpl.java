@@ -8,13 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.recipiesplan.recipies.dto.RecipeDto;
 import com.recipiesplan.recipies.entities.Recipe;
+import com.recipiesplan.recipies.mappers.RecipesMapper;
 import com.recipiesplan.recipies.repositories.RecipiesRepository;
 import com.recipiesplan.recipies.services.RecipiesService;
 
 import tools.jackson.databind.ObjectMapper;
 
+
 @Service
 public class RecipiesServiceImpl implements RecipiesService{
+
     private RecipiesRepository recipiesRepository;
     private ObjectMapper objectMapper;
 
@@ -36,5 +39,9 @@ public class RecipiesServiceImpl implements RecipiesService{
         Recipe recipeEntity = objectMapper.convertValue(recipe, Recipe.class);
         return recipiesRepository.save(recipeEntity);
     }
+
+    /*private List<IngredientsRecipes> findAllIngredientsRecipes(RecipeDto recipe) {
+        return null;
+    }*/
     
 }

@@ -63,8 +63,7 @@ public class IngredientServiceTest {
     private Ingredient makeIngredient() {
         Ingredient ingredient = new Ingredient();
         ingredient.setName("test");
-        ingredient.setQuantity(1);
-        ingredient.setUnit("test");
+        ingredient.setDescription("test");
         return ingredient;
     }
 }
