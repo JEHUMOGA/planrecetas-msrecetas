@@ -21,8 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.recipiesplan.recipies.dto.IngredientsRecipesDto;
-import com.recipiesplan.recipies.dto.RecipeDto;
+import com.recipiesplan.recipies.dto.input.IngredientsRecipesInputDto;
+import com.recipiesplan.recipies.dto.input.RecipeInputDto;
 import com.recipiesplan.recipies.entities.Ingredient;
 import com.recipiesplan.recipies.entities.IngredientsRecipes;
 import com.recipiesplan.recipies.entities.Recipe;
@@ -63,14 +63,14 @@ public class RecipiesControllerTest {
     void shouldSaveRecipeDate() throws Exception {
         // Creation mock data
         Recipe recipe = makeRecipe();
-        RecipeDto recipeDto = makeRecipeDto();
+        RecipeInputDto recipeInputDto = makeRecipeInputDto();
 
         // Define mock behavior
-        when(recipiesService.saveRecipe(recipeDto)).thenReturn(recipe);
+        when(recipiesService.saveRecipe(recipeInputDto)).thenReturn(recipe);
 
         mockMvc.perform(post("/recipe")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(recipeDto)))
+                .content(objectMapper.writeValueAsString(recipeInputDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.meta.status").value("CREATED"))
                 .andExpect(jsonPath("$.meta.transacionID").exists());
@@ -112,12 +112,12 @@ public class RecipiesControllerTest {
         return ingredientsRecipes;
     }
 
-    private RecipeDto makeRecipeDto() {
-        RecipeDto recipeDto = new RecipeDto();
+    private RecipeInputDto makeRecipeInputDto() {
+        RecipeInputDto recipeDto = new RecipeInputDto();
         recipeDto.setName("test");
         recipeDto.setDescription("test");
         recipeDto.setInstructions("test");
-        recipeDto.setIngredients(List.of(makeIngredientsRecipesDto()));
+        recipeDto.setIngredientsDetails(List.of(makeIngredientsRecipesDto()));
         recipeDto.setTimePreparation("test");
         recipeDto.setPortions(1);
         recipeDto.setUtensils(List.of("Cuchara"));
@@ -125,11 +125,11 @@ public class RecipiesControllerTest {
         return recipeDto;
     }
 
-    private IngredientsRecipesDto makeIngredientsRecipesDto() {
-        IngredientsRecipesDto ingredientsRecipesDto = new IngredientsRecipesDto();
+    private IngredientsRecipesInputDto makeIngredientsRecipesDto() {
+        IngredientsRecipesInputDto ingredientsRecipesDto = new IngredientsRecipesInputDto();
         ingredientsRecipesDto.setQuantity(1);
         ingredientsRecipesDto.setUnit("test");
-        ingredientsRecipesDto.setIngredient(makeIngredient());
+        ingredientsRecipesDto.setIngredient(makeIngredient().getId());
         return ingredientsRecipesDto;
     }
 

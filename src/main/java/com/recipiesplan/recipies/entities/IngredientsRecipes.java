@@ -1,7 +1,6 @@
 package com.recipiesplan.recipies.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,10 +19,10 @@ public class IngredientsRecipes {
     private Long id;
     private Integer quantity;
     private String unit;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 }
