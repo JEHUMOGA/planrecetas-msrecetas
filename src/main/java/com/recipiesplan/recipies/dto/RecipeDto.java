@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RecipeDto {
-    private Long id;
     private String name;
     private String description;
     private String instructions;

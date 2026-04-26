@@ -1,6 +1,9 @@
 package com.recipiesplan.recipies.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,10 +22,11 @@ public class IngredientsRecipes {
     private Long id;
     private Integer quantity;
     private String unit;
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
+    @JsonIgnore//it is necesary for avoid infinite recursion
+    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Recipe.class)
+    @JoinColumn(name = "recipe_id", nullable = true)   
     private Recipe recipe;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,targetEntity = Ingredient.class)
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 }

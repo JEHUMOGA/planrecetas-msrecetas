@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import com.recipiesplan.recipies.dto.input.RecipeInputDto;
 import com.recipiesplan.recipies.entities.Ingredient;
 import com.recipiesplan.recipies.entities.IngredientsRecipes;
 import com.recipiesplan.recipies.entities.Recipe;
+import com.recipiesplan.recipies.repositories.IngredientsRecipesRepository;
 import com.recipiesplan.recipies.repositories.IngredientsRepository;
 import com.recipiesplan.recipies.repositories.RecipiesRepository;
 import com.recipiesplan.recipies.services.impl.RecipiesServiceImpl;
@@ -37,13 +39,16 @@ public class RecipesServiceTest {
     private RecipiesRepository recipiesRepository;
     @Mock
     private IngredientsRepository ingredientsRepository;
+    @Mock
+    private IngredientsRecipesRepository ingredientsRecipesRepository;
+
 
     @InjectMocks
     private RecipiesServiceImpl recipiesService;
 
     @BeforeEach
     void setUp() {
-        recipiesService = new RecipiesServiceImpl(recipiesRepository, ingredientsRepository);
+        recipiesService = new RecipiesServiceImpl(recipiesRepository, ingredientsRecipesRepository,ingredientsRepository);
     }
 
 
@@ -93,6 +98,7 @@ public class RecipesServiceTest {
         // Define mock behavior
         Mockito.when(recipiesRepository.save(any(Recipe.class))).thenReturn(recipe);
         Mockito.when(ingredientsRepository.findById(any(Long.class))).thenReturn(Optional.of(makeIngredient()));
+        //Mockito.when(ingredientsRecipesRepository.saveAll(any())).thenReturn(List.of(makeIngredientsRecipes()));
 
         // Execute and verify
         Recipe response = recipiesService.saveRecipe(recipeDto);
@@ -109,10 +115,11 @@ public class RecipesServiceTest {
 
 
         Recipe recipe = new Recipe();
+        recipe.setId(1L);
         recipe.setName("test");
         recipe.setDescription("test");
         recipe.setInstructions("test");
-        recipe.setIngredients(ingredients);
+        recipe.setIngredients(Set.copyOf(ingredients));
         recipe.setTimePreparation("test");
         recipe.setPortions(1);
         recipe.setUtensils(utensils);
@@ -123,6 +130,7 @@ public class RecipesServiceTest {
 
     private Ingredient makeIngredient() {
         Ingredient ingredient = new Ingredient();
+        ingredient.setId(1L);
         ingredient.setName("test");
         ingredient.setDescription("test");
         return ingredient;
@@ -130,6 +138,7 @@ public class RecipesServiceTest {
 
     private IngredientsRecipes makeIngredientsRecipes() {
         IngredientsRecipes ingredientsRecipes = new IngredientsRecipes();
+        ingredientsRecipes.setId(1L);
         ingredientsRecipes.setQuantity(1);
         ingredientsRecipes.setUnit("test");
         ingredientsRecipes.setIngredient(makeIngredient());

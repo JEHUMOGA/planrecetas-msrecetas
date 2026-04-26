@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class RecipiesControllerTest {
         recipe.setName("test");
         recipe.setDescription("test");
         recipe.setInstructions("test");
-        recipe.setIngredients(ingredients);
+        recipe.setIngredients(Set.copyOf(ingredients));
         recipe.setTimePreparation("test");
         recipe.setPortions(1);
         recipe.setUtensils(utensils);
