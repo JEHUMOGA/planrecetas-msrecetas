@@ -1,4 +1,4 @@
-package com.recipiesplan.recipies.dto;
+package com.recipiesplan.recipies.dto.output;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
