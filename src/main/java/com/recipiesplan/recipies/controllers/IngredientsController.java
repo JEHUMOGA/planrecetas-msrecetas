@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.recipiesplan.recipies.dto.IngredientDto;
-import com.recipiesplan.recipies.dto.Meta;
-import com.recipiesplan.recipies.dto.Response;
+import com.recipiesplan.recipies.dto.output.Meta;
+import com.recipiesplan.recipies.dto.output.Response;
 import com.recipiesplan.recipies.entities.Ingredient;
 import com.recipiesplan.recipies.services.IngredientsServices;
 import com.recipiesplan.recipies.utils.Utilities;

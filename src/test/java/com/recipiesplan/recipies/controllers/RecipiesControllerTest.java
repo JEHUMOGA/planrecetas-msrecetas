@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.recipiesplan.recipies.dto.IngredientDto;
-import com.recipiesplan.recipies.dto.RecipeDto;
+import com.recipiesplan.recipies.dto.input.IngredientsRecipesInputDto;
+import com.recipiesplan.recipies.dto.input.RecipeInputDto;
 import com.recipiesplan.recipies.entities.Ingredient;
+import com.recipiesplan.recipies.entities.IngredientsRecipes;
 import com.recipiesplan.recipies.entities.Recipe;
 import com.recipiesplan.recipies.services.RecipiesService;
 
@@ -59,30 +61,25 @@ public class RecipiesControllerTest {
     }
 
     @Test
-    void shouldSaveRecipeDate(){
+    void shouldSaveRecipeDate() throws Exception {
         // Creation mock data
         Recipe recipe = makeRecipe();
-        RecipeDto recipeDto = makeRecipeDto();
-
+        RecipeInputDto recipeInputDto = makeRecipeInputDto();
 
         // Define mock behavior
-        when(recipiesService.saveRecipe(recipeDto)).thenReturn(recipe);
+        when(recipiesService.saveRecipe(recipeInputDto)).thenReturn(recipe);
 
-        try {
-            mockMvc.perform(post("/recipe")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(recipeDto)))
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.meta.status").value("CREATED"))
-                    .andExpect(jsonPath("$.meta.transacionID").exists());
-        } catch (Exception e ){
-            e.printStackTrace();
-        }
+        mockMvc.perform(post("/recipe")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(recipeInputDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.meta.status").value("CREATED"))
+                .andExpect(jsonPath("$.meta.transacionID").exists());
     }
 
     private Recipe makeRecipe() {
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(makeIngredient());
+        List<IngredientsRecipes> ingredients = new ArrayList<>();
+        ingredients.add(makeIngredientsRecipes());
 
         List<String> utensils = new ArrayList<>();
         utensils.add("Cuchara");
@@ -92,7 +89,7 @@ public class RecipiesControllerTest {
         recipe.setName("test");
         recipe.setDescription("test");
         recipe.setInstructions("test");
-        recipe.setIngredients(ingredients);
+        recipe.setIngredients(Set.copyOf(ingredients));
         recipe.setTimePreparation("test");
         recipe.setPortions(1);
         recipe.setUtensils(utensils);
@@ -104,17 +101,24 @@ public class RecipiesControllerTest {
     private Ingredient makeIngredient() {
         Ingredient ingredient = new Ingredient();
         ingredient.setName("test");
-        ingredient.setQuantity(1);
-        ingredient.setUnit("test");
+        ingredient.setDescription("test");
         return ingredient;
     }
 
-    private RecipeDto makeRecipeDto() {
-        RecipeDto recipeDto = new RecipeDto();
+    private IngredientsRecipes makeIngredientsRecipes() {
+        IngredientsRecipes ingredientsRecipes = new IngredientsRecipes();
+        ingredientsRecipes.setQuantity(1);
+        ingredientsRecipes.setUnit("test");
+        ingredientsRecipes.setIngredient(makeIngredient());
+        return ingredientsRecipes;
+    }
+
+    private RecipeInputDto makeRecipeInputDto() {
+        RecipeInputDto recipeDto = new RecipeInputDto();
         recipeDto.setName("test");
         recipeDto.setDescription("test");
         recipeDto.setInstructions("test");
-        recipeDto.setIngredients(List.of(makeIngredientDto()));
+        recipeDto.setIngredientsDetails(List.of(makeIngredientsRecipesDto()));
         recipeDto.setTimePreparation("test");
         recipeDto.setPortions(1);
         recipeDto.setUtensils(List.of("Cuchara"));
@@ -122,12 +126,12 @@ public class RecipiesControllerTest {
         return recipeDto;
     }
 
-    private IngredientDto makeIngredientDto() {
-        IngredientDto ingredientDto = new IngredientDto();
-        ingredientDto.setName("test");
-        ingredientDto.setQuantity(1);
-        ingredientDto.setUnit("test");
-        return ingredientDto;
+    private IngredientsRecipesInputDto makeIngredientsRecipesDto() {
+        IngredientsRecipesInputDto ingredientsRecipesDto = new IngredientsRecipesInputDto();
+        ingredientsRecipesDto.setQuantity(1);
+        ingredientsRecipesDto.setUnit("test");
+        ingredientsRecipesDto.setIngredient(makeIngredient().getId());
+        return ingredientsRecipesDto;
     }
 
 }

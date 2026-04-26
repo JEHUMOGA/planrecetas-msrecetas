@@ -41,8 +41,8 @@ public class IngredientsControllerTest {
     void shouldReturnIngredientsPage() throws Exception {
         Ingredient ingredient = new Ingredient();
         ingredient.setName("Tomato");
-        ingredient.setQuantity(2);
-        ingredient.setUnit("Units");
+        ingredient.setDescription("Red tomato");
+
 
         List<Ingredient> ingredients = List.of(ingredient);
         Pageable pageable = PageRequest.of(0, 10);
@@ -60,8 +60,7 @@ public class IngredientsControllerTest {
     void shouldSaveIngredient() throws Exception {
         IngredientDto dto = new IngredientDto();
         dto.setName("Salt");
-        dto.setQuantity(1);
-        dto.setUnit("Spoon");
+        dto.setDescription("Salt");
 
         Ingredient saved = new Ingredient();
         saved.setId(1L);

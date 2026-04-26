@@ -2,9 +2,10 @@ package com.recipiesplan.recipies.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.recipiesplan.recipies.dto.Meta;
 import com.recipiesplan.recipies.dto.RecipeDto;
-import com.recipiesplan.recipies.dto.Response;
+import com.recipiesplan.recipies.dto.input.RecipeInputDto;
+import com.recipiesplan.recipies.dto.output.Meta;
+import com.recipiesplan.recipies.dto.output.Response;
 import com.recipiesplan.recipies.entities.Recipe;
 import com.recipiesplan.recipies.services.RecipiesService;
 import com.recipiesplan.recipies.utils.Utilities;
@@ -38,7 +39,7 @@ public class RecipiesController {
         Page<Recipe> recipesPage = recipiesService.getAllRecipes(page, size);
         
         Meta meta = new Meta(HttpStatus.OK, HttpStatusCode.valueOf(200), Utilities.timestampGeneration());
-        Response<Page<Recipe>> response = new com.recipiesplan.recipies.dto.Response<>();
+        Response<Page<Recipe>> response = new com.recipiesplan.recipies.dto.output.Response<>();
         response.setData(recipesPage);
         response.setMeta(meta);
 
@@ -46,10 +47,10 @@ public class RecipiesController {
     }
 
     @PostMapping("recipe")
-    public ResponseEntity<?> postRecipe(@RequestBody RecipeDto recipe) {
+    public ResponseEntity<?> postRecipe(@RequestBody RecipeInputDto recipe) {
         Recipe savedRecipe = recipiesService.saveRecipe(recipe);
         Meta meta = new Meta(HttpStatus.CREATED, HttpStatusCode.valueOf(201), Utilities.timestampGeneration());
-        Response<Recipe> response = new com.recipiesplan.recipies.dto.Response<>();
+        Response<Recipe> response = new com.recipiesplan.recipies.dto.output.Response<>();
         response.setData(savedRecipe);
         response.setMeta(meta);
 
